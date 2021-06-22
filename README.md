@@ -1,2 +1,1 @@
-# dproxy
-dproxy is a pure dart multi channel websocket server.
+A simple command-line application.
