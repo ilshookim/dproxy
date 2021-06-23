@@ -73,6 +73,7 @@ void main(List<String> arguments) async {
     final String version = pubspec[Global.version];
     final String description = pubspec[Global.description];
     print('$name $version - $description serving at http://${server.address.host}:${server.port}');
+    print('options: epoch=$epochOption');
   } catch (exc) {
     print('$function: $exc');
   }
