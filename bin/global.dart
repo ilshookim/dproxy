@@ -19,7 +19,7 @@ class Global {
   static final String defaultPortOption = '9450';
   static final String epochOption = 'epoch';
   static final String epochAbbrOption = 'h';
-  static final String defaultEpochOption = 'false';
+  static final String defaultEpochOption = 'true';
   static final String epochEnvOption = '${defaultApp}_EPOCH';
 
   static final String indexName = 'index.html';

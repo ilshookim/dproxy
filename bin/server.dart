@@ -7,6 +7,7 @@
 /// /app         <- working directory (default)
 ///
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:args/args.dart';
 import 'package:shelf/shelf.dart';
@@ -50,10 +51,16 @@ void main(List<String> arguments) async {
       print('connections=${_connections.length}, sid=$sid');
 
       ws.stream.listen((message) {
+        final int ended = DateTime.now().microsecondsSinceEpoch;
+        final Map payload = json.decode(message);
+        final String pts = payload['pts'];
+        final int began = int.tryParse(pts) ?? ended;
+        final int dur = ended - began;
+
         final String id = _connections[ws] ?? '(nothing)';
         final Map echo = { 'sid': id, 'msg': message };
         ws.sink.add("$echo");
-        print('echo: sid=$id, msg=$message');
+        print('echo: dur=${dur / 1000} ms, sid=$id, length=${message.length}');
       }, onDone: () {
         _connections.remove(ws);
         print('close: sid=$sid, connections=${_connections.length}');
