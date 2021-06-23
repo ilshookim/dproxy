@@ -13,7 +13,6 @@ class Service {
   bool epoch = Global.defaultEpochOption.parseBool();
 
   Map<WebSocketChannel, String> _connections = Map();
-  Map<WebSocketChannel, dynamic> _messages = Map();
 
   String _sid({bool epoch = true}) {
     final DateTime now = DateTime.now();
@@ -21,11 +20,15 @@ class Service {
     return now.toIso8601String();
   }
 
-  void echo(WebSocketChannel ws) {
+  void echo(WebSocketChannel ws, sid, payload) async {
     final String function = 'Service.listen';
     try {
-        final message = _messages[ws];
-        ws.sink.add("$message");
+      // Stopwatch sw = Stopwatch()..start();
+      // final String cid = payload['cid'];
+      final int ts3 = DateTime.now().millisecondsSinceEpoch;
+      payload['ts3'] = '$ts3';
+      ws.sink.add(json.encode(payload));
+      // print('$function: sent: sid=$sid, cid=$cid, length=${message.length}, consumed=${sw.elapsed.inMicroseconds / 1000} ms');
     } catch (exc) {
       print('$function: $exc');
     }
@@ -39,29 +42,11 @@ class Service {
       print('$function: connections=${_connections.length}, sid=$sid');
 
       ws.stream.listen((message) {
-        final int ended = DateTime.now().millisecondsSinceEpoch;
+        final int ts2 = DateTime.now().millisecondsSinceEpoch;
         final Map payload = json.decode(message);
-        final String pts = payload['pts'];
-        final int began = int.tryParse(pts) ?? ended;
-        final int dur = ended - began;
-        final String sid = _connections[ws] ?? '(notFound)';
-        print('$function: dur=$dur ms, sid=$sid, length=${message.length}');
-
-        _messages[ws] = message;
-        echo(ws);
-        // ws.sink.add("$message");
-        // echo(ws, message);
-        // ws.sink.add("$message");
-        // final String sid = _connections[ws] ?? '(notFound)';
-        // print('$function: echo: dur=$dur ms, sid=$sid, length=${message.length}');
-
-        // Stopwatch sw = Stopwatch()..start();
-        // final String data = json.encode(payload);
-        // final String sid = _connections[ws] ?? '(nothing)';
-        // payload['sid'] = sid;
-        // // ws.sink.add("${json.encode(payload)}");
-        // ws.sink.add("$message");
-        // print('echo: dur=${dur / 1000} ms, sid=$sid, length=${message.length}, consumed=${sw.elapsed.inMicroseconds / 1000} ms');
+        payload['ts2'] = '$ts2';
+        payload['sid'] = sid;
+        echo(ws, sid, payload);
       }, onDone: () {
         _connections.remove(ws);
         print('$function: close: sid=$sid, connections=${_connections.length}');
