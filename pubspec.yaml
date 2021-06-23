@@ -24,6 +24,13 @@ dependencies:
   # A model for web server middleware that encourages composition and easy reuse
   shelf: ^1.1.4
 
+  # A convinent request router for the shelf web-framework, with support for URL-parameters, 
+  # nested routers and routers generated from source annotations.
+  shelf_router: ^1.0.0
+
+  # Static file server support for Shelf
+  shelf_static: ^1.0.0
+
   # A shelf handler that wires up a listener for every connection.
   shelf_web_socket: ^1.0.1
 

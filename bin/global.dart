@@ -22,6 +22,8 @@ class Global {
   static final String defaultEpochOption = 'true';
   static final String epochEnvOption = '${defaultApp}_EPOCH';
 
+  static final String uriConfigure = "configure";
+
   static final String indexName = 'index.html';
   static final String faviconName = 'favicon.ico';
   static final int exitCodeCommandLineUsageError = 64;
