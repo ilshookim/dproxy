@@ -11,7 +11,6 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
-import 'package:stack_trace/stack_trace.dart';
 
 import 'global.dart';
 import 'api.dart';

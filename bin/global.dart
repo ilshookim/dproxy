@@ -7,7 +7,6 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
-import 'package:stack_trace/stack_trace.dart';
 
 class Global {
   static final String defaultApp = 'DROXY';
@@ -16,7 +15,7 @@ class Global {
   static final String portOption = 'port';
   static final String portAbbrOption = 'p';
   static final String portEnvOption = '${defaultApp}_PORT';
-  static final String defaultPortOption = '9450';
+  static final String defaultPortOption = '9455';
   static final String epochOption = 'epoch';
   static final String epochAbbrOption = 'h';
   static final String defaultEpochOption = 'true';

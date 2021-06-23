@@ -5,7 +5,6 @@
 ///
 import 'package:path/path.dart';
 import 'package:shelf/shelf.dart';
-import 'package:stack_trace/stack_trace.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_static/shelf_static.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
