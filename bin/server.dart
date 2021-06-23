@@ -51,16 +51,23 @@ void main(List<String> arguments) async {
       print('connections=${_connections.length}, sid=$sid');
 
       ws.stream.listen((message) {
-        final int ended = DateTime.now().microsecondsSinceEpoch;
+        final int ended = DateTime.now().millisecondsSinceEpoch;
         final Map payload = json.decode(message);
         final String pts = payload['pts'];
         final int began = int.tryParse(pts) ?? ended;
         final int dur = ended - began;
 
-        final String id = _connections[ws] ?? '(nothing)';
-        final Map echo = { 'sid': id, 'msg': message };
-        ws.sink.add("$echo");
-        print('echo: dur=${dur / 1000} ms, sid=$id, length=${message.length}');
+        ws.sink.add("$message");
+        final String sid = _connections[ws] ?? '(notFound)';
+        print('echo: dur=$dur ms, sid=$sid, length=${message.length}');
+
+        // Stopwatch sw = Stopwatch()..start();
+        // final String data = json.encode(payload);
+        // final String sid = _connections[ws] ?? '(nothing)';
+        // payload['sid'] = sid;
+        // // ws.sink.add("${json.encode(payload)}");
+        // ws.sink.add("$message");
+        // print('echo: dur=${dur / 1000} ms, sid=$sid, length=${message.length}, consumed=${sw.elapsed.inMicroseconds / 1000} ms');
       }, onDone: () {
         _connections.remove(ws);
         print('close: sid=$sid, connections=${_connections.length}');
