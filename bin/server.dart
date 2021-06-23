@@ -18,6 +18,12 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'global.dart';
 
+String _sid({bool epoch = true}) {
+  final DateTime now = DateTime.now();
+  if (epoch) return '${now.microsecondsSinceEpoch}';
+  return now.toIso8601String();
+}
+
 void main(List<String> arguments) async {
   final String function = Trace.current().frames[0].member!;
   try {
@@ -26,18 +32,20 @@ void main(List<String> arguments) async {
     /// port: default api port          ex) 8088
     /// 
     final ArgParser argParser = ArgParser()
-      ..addOption(Global.portOption, abbr: Global.portAbbrOption);
+      ..addOption(Global.portOption, abbr: Global.portAbbrOption)
+      ..addOption(Global.epochOption, abbr: Global.epochAbbrOption);
     final ArgResults argResults = argParser.parse(arguments);
     final String portOption = argResults[Global.portOption] ?? Platform.environment[Global.portEnvOption] ?? Global.defaultPortOption;
+    final String epochOption = argResults[Global.epochOption] ?? Platform.environment[Global.epochEnvOption] ?? Global.defaultEpochOption;
 
     /// WEBSOCKETS
     /// 
     /// sid: session id
     /// 
     Map<WebSocketChannel, String> _connections = Map();
+    final bool epoch = epochOption.parseBool();
     final Handler handler = webSocketHandler((WebSocketChannel ws) {
-      final DateTime now = DateTime.now();
-      final String sid = now.toIso8601String();
+      final String sid = _sid(epoch: epoch);
       _connections[ws] = sid;
       print('connections=${_connections.length}, sid=$sid');
 
@@ -55,7 +63,7 @@ void main(List<String> arguments) async {
       });
 
     });
-    
+
     final String host = Global.defaultHost;
     final int port = int.tryParse(portOption)!;
     final HttpServer server = await serve(handler, host, port);
