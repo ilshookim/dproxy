@@ -19,7 +19,7 @@ class API {
 
   /// configure: curl http://localhost:8088/v1/configure
   Response onConfigure(Request request) {
-    final String function = Trace.current().frames[0].member!;
+    final String function = 'API.onConfigure';
     final Uri uri = request.requestedUri;
     String message = 'empty';
     try {
@@ -34,7 +34,7 @@ class API {
 
   Handler v1({
     bool? epoch}) {
-    final String function = Trace.current().frames[0].member!;
+    final String function = 'API.v1';
     try {
       final Handler ws = webSocketHandler(service.listen);
       final Handler index = createStaticHandler(Global.currentPath,
