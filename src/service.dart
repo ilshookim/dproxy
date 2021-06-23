@@ -23,12 +23,16 @@ class Service {
   void echo(WebSocketChannel ws, sid, payload) async {
     final String function = 'Service.listen';
     try {
-      // Stopwatch sw = Stopwatch()..start();
-      // final String cid = payload['cid'];
+      Stopwatch sw = Stopwatch()..start();
+      final String cid = payload['cid'];
+      final int ts1 = int.tryParse(payload['ts1'])!;
+      final int ts2 = int.tryParse(payload['ts2'])!;
       final int ts3 = DateTime.now().millisecondsSinceEpoch;
       payload['ts3'] = '$ts3';
-      ws.sink.add(json.encode(payload));
-      // print('$function: sent: sid=$sid, cid=$cid, length=${message.length}, consumed=${sw.elapsed.inMicroseconds / 1000} ms');
+      final String message = json.encode(payload);
+      ws.sink.add(message);
+      final int sent = ts2 - ts1;
+      print('$function: sent: sid=$sid, cid=$cid, length=${message.length}, sent=$sent ms, consumed=${sw.elapsed.inMicroseconds / 1000} ms');
     } catch (exc) {
       print('$function: $exc');
     }
