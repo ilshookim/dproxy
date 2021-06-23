@@ -20,24 +20,41 @@ class Service {
     return now.toIso8601String();
   }
 
-  void echo(WebSocketChannel ws, sid, payload) async {
+  void echo(WebSocketChannel ws, payload) async {
     final String function = 'Service.listen';
     try {
-      Stopwatch sw = Stopwatch()..start();
-      final String cid = payload['cid'];
-      final int ts1 = int.tryParse(payload['ts1'])!;
-      final int ts2 = int.tryParse(payload['ts2'])!;
-      final int ts3 = DateTime.now().millisecondsSinceEpoch;
-      payload['ts3'] = '$ts3';
-      final String message = json.encode(payload);
-      ws.sink.add(message);
-      final int sent = ts2 - ts1;
-      print('$function: sent: sid=$sid, cid=$cid, length=${message.length}, sent=$sent ms, consumed=${sw.elapsed.inMicroseconds / 1000} ms');
+      const bool detail = false;
+      const bool stats = true;
+      // ignore: dead_code
+      if (detail) {
+        Stopwatch sw = Stopwatch()..start();
+        final String sid = payload['cid'];
+        final String cid = payload['cid'];
+        final int ts1 = int.tryParse(payload['ts1'])!;
+        final int ts2 = int.tryParse(payload['ts2'])!;
+        final int ts3 = DateTime.now().millisecondsSinceEpoch;
+        payload['ts3'] = '$ts3';
+        final String message = json.encode(payload);
+        ws.sink.add(message);
+        final int sent = ts2 - ts1;
+        print('$function: sent: sid=$sid, cid=$cid, length=${message.length}, sent=$sent ms, consumed=${sw.elapsed.inMicroseconds / 1000} ms');
+      } else if (stats) {
+        final int ts1 = int.tryParse(payload['ts1'])!;
+        final int ts2 = int.tryParse(payload['ts2'])!;
+        final int sent = ts2 - ts1;
+        print('$function: sent=$sent ms');
+      }
+      // ignore: dead_code
+      else {
+        final int ts3 = DateTime.now().millisecondsSinceEpoch;
+        payload['ts3'] = '$ts3';
+        ws.sink.add(json.encode(payload));
+      }
     } catch (exc) {
       print('$function: $exc');
     }
   }
-  
+
   void listen(WebSocketChannel ws) {
     final String function = 'Service.listen';
     try {
@@ -45,12 +62,12 @@ class Service {
       _connections[ws] = sid;
       print('$function: connections=${_connections.length}, sid=$sid');
 
-      ws.stream.listen((message) {
+      ws.stream.listen((message) async {
         final int ts2 = DateTime.now().millisecondsSinceEpoch;
         final Map payload = json.decode(message);
         payload['ts2'] = '$ts2';
         payload['sid'] = sid;
-        echo(ws, sid, payload);
+        echo(ws, payload);
       }, onDone: () {
         _connections.remove(ws);
         print('$function: close: sid=$sid, connections=${_connections.length}');
