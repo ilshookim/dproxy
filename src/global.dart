@@ -1,7 +1,7 @@
-/// dangry designed by ilshookim
+/// droxy designed by ilshookim
 /// MIT License
 ///
-/// https://github.com/ilshookim/dangry
+/// https://github.com/ilshookim/droxy
 ///
 import 'dart:io';
 
@@ -21,7 +21,10 @@ class Global {
   static final String defaultEpochOption = 'true';
   static final String epochEnvOption = '${defaultApp}_EPOCH';
 
-  static final String uriConfigure = "configure";
+  static final String uriConfigure = 'configure';
+  static final String paramSid = 'sid';
+  static final String paramSendPort = 'sendPort';
+  static final String paramWebSocket = 'webSocket';
 
   static final String indexName = 'index.html';
   static final String faviconName = 'favicon.ico';

@@ -1,7 +1,7 @@
-/// dangry designed by ilshookim
+/// droxy designed by ilshookim
 /// MIT License
 ///
-/// https://github.com/ilshookim/dangry
+/// https://github.com/ilshookim/droxy
 ///
 import 'package:path/path.dart';
 import 'package:shelf/shelf.dart';
